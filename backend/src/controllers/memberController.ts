@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import Member from "../models/member";
+import Member, { IMember } from "../models/member";
+import mongoose from "mongoose";
 
 export const addMember = async (req: Request, res: Response) => {
   try {
@@ -86,7 +87,10 @@ export const getMemberFamily = async (req: Request, res: Response) => {
     const memberId = req.params.id;
 
     const member = await Member.findById(memberId);
-    if (!member) return res.status(404).json({ message: "Member not found" });
+    if (!member) {
+        res.status(404).json({ message: "Member not found" });
+      return;
+    }
 
     const spouse = member.spouseId
       ? await Member.findById(member.spouseId)
@@ -111,7 +115,8 @@ export const getMemberById = async (req: Request, res: Response) => {
       .populate("parentId");
 
     if (!member) {
-      return res.status(404).json({ message: "Member not found" });
+      res.status(404).json({ message: "Member not found" });
+      return;
     }
 
     res.json(member);
@@ -126,7 +131,10 @@ export const deleteMember = async (req: Request, res: Response) => {
   try {
     // Find the member
     const member = await Member.findById(memberId);
-    if (!member) return res.status(404).json({ message: "Member not found" });
+    if (!member) {
+        res.status(404).json({ message: "Member not found" });
+      return;
+    }
 
     // If this member has a spouse, clear the spouse reference
     if (member.spouseId) {
@@ -137,7 +145,7 @@ export const deleteMember = async (req: Request, res: Response) => {
     const deleteChildren = async (parentId: string) => {
       const children = await Member.find({ parentIds: parentId });
       for (const child of children) {
-        await deleteChildren(child._id.toString()); // Recursively delete each child's children
+        await deleteChildren((child._id as mongoose.Types.ObjectId).toString()); // Recursively delete each child's children
         await Member.findByIdAndDelete(child._id);
       }
     };
@@ -177,25 +185,28 @@ export const linkSpouse = async (req: Request, res: Response) => {
   try {
     const { memberId, spouseId } = req.body;
 
-    // Validate both members exist
-    const member = await Member.findById(memberId);
-    const spouse = await Member.findById(spouseId);
+    // Find both members with proper typing
+    const member = await Member.findById<IMember>(memberId);
+    const spouse = await Member.findById<IMember>(spouseId);
 
     if (!member || !spouse) {
-      return res.status(404).json({ message: "One or both members not found" });
+      res.status(404).json({ message: "One or both members not found" });
+      return;
     }
 
     // Check if either member already has a spouse
     if (member.spouseId) {
-      return res.status(400).json({ message: "Member already has a spouse" });
+      res.status(400).json({ message: "Member already has a spouse" });
+      return;
     }
     if (spouse.spouseId) {
-      return res.status(400).json({ message: "Selected person already has a spouse" });
+      res.status(400).json({ message: "Selected person already has a spouse" });
+      return;
     }
 
     // Link them as spouses (bidirectional)
-    member.spouseId = spouse._id;
-    spouse.spouseId = member._id;
+    member.spouseId = spouse._id as mongoose.Types.ObjectId;
+    spouse.spouseId = member._id as mongoose.Types.ObjectId;
 
     await member.save();
     await spouse.save();

@@ -7,7 +7,7 @@ import {
   Box,
   CardActions,
 } from "@mui/material";
-import { FamilyState, Member } from "../types/Member";
+import { Member } from "../types/Member";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
@@ -37,7 +37,7 @@ const MemberCard = ({
     }
     e.preventDefault();
     dispatch(setSelectedMember(member));
-    dispatch(setCurrentFamilyMembers({} as FamilyState));
+    dispatch(setCurrentFamilyMembers(null));
     navigate(`/member/${member._id}`);
   };
 

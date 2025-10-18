@@ -41,7 +41,7 @@ export const ColorButton = styled(Button)<ButtonProps>(() => ({
   },
 }));
 
-export const LinkSpouseButton = styled(Button)<ButtonProps>(({ theme }) => ({
+export const LinkSpouseButton = styled(Button)<ButtonProps>(() => ({
   color: '#fff',
   backgroundColor: '#FF4081',
   padding: '10px 24px',
@@ -67,7 +67,7 @@ function Navbar() {
 
   const navigate = useNavigate();
   const { showSuccess } = useToast();
-  const currentMember = useSelector((state: RootState) => state.member.currentFamily.member);
+  const currentMember = useSelector((state: RootState) => state.member.currentFamily?.member);
 
   // Extract member ID from URL if on member page
   const getMemberIdFromUrl = () => {

@@ -1,5 +1,4 @@
 // src/redux/memberSlice.tsx
-import _ from "lodash";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Member, FamilyState } from "../types/Member";
 
@@ -8,7 +7,7 @@ interface MemberState {
   isDialogOpen: boolean;
   selectedMember: Member;
   members: Member[];
-  currentFamily: FamilyState;
+  currentFamily: FamilyState | null;
   lineage: Member[];
 }
 
@@ -17,7 +16,7 @@ const initialState: MemberState = {
   isDialogOpen: false,
   selectedMember: {} as Member,
   members: [],
-  currentFamily: {} as FamilyState,
+  currentFamily: {} as FamilyState | null,
   lineage: [],
 };
 
@@ -41,7 +40,7 @@ const memberSlice = createSlice({
     },
 
 
-    setCurrentFamilyMembers(state, action: PayloadAction<FamilyState>) {
+    setCurrentFamilyMembers(state, action: PayloadAction<FamilyState|null>) {
       state.currentFamily = action.payload;
     },
 
@@ -52,18 +51,19 @@ const memberSlice = createSlice({
     removeMember: (state, action) => {
       const memberId = action.payload;
 
-      // if it is root
-      if (_.isEmpty(state.currentFamily)) {
+      // If currentFamily is empty, we're dealing with root members
+      if (!state.currentFamily?.member || !state.currentFamily.children || !state.currentFamily.spouse) {
         state.members = state.members.filter(
           (member) => member._id !== memberId
         );
         return;
-      }; 
+      }
+
       // Remove spouse if matched
       if (state.currentFamily.spouse?._id === memberId) {
         state.currentFamily.spouse = null;
       }
-    
+
       // Remove from children list
       state.currentFamily.children = state.currentFamily.children.filter(
         (child) => child._id !== memberId
@@ -76,6 +76,9 @@ const memberSlice = createSlice({
       if (!newMember.parentId) {
         state.members.push(newMember);
         return;
+      }
+      if (!state.currentFamily) {
+        state.currentFamily = {} as FamilyState;
       }
       if (newMember.isSpouse) {
         state.currentFamily.spouse = newMember;

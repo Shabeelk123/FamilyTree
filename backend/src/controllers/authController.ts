@@ -1,15 +1,18 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import user from "../models/user";
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret";
 
-export const registerUser = async (req: Request, res: Response) => {
+export const registerUser = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   const { name, email, password } = req.body;
   try {
     const existingUser = await user.findOne({ email });
-    if (existingUser) return res.status(400).json({ message: "User already exists" });
+    if (existingUser) res.status(400).json({ message: "User already exists" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -28,10 +31,13 @@ export const loginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
     const newUser = await user.findOne({ email });
-    if (!newUser) return res.status(400).json({ message: "Invalid credentials" });
+    if (!newUser) { 
+      res.status(400).json({ message: "Invalid credentials" });
+      return;
+    }
 
     const isMatch = await bcrypt.compare(password, newUser.password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+    if (!isMatch) res.status(400).json({ message: "Invalid credentials" });
 
     const token = jwt.sign({ id: newUser._id }, JWT_SECRET, { expiresIn: "1d" });
 

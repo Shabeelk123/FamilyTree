@@ -7,7 +7,7 @@ import {
 } from "../services/memberService";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-import { Grid, Typography, Box } from "@mui/material";
+import { Grid, Typography, Box, CircularProgress } from "@mui/material";
 import MemberCard from "../components/MemberCard";
 import EmptyPage from "../components/EmptyPage";
 import { setCurrentMemberId } from "../redux/memberSlice";
@@ -20,12 +20,12 @@ const MemberPage = () => {
   const dispatch = useDispatch();
 
   const currentFamily = useSelector(
-    (state: RootState) => state.member.currentFamily
-  );
+    (state: RootState) => state.member.currentFamily);
   const lineage = useSelector((state: RootState) => state.member.lineage);
 
   const [open, setOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const handleView = async (member: Member) => {
     setSelectedMember(member);
@@ -44,15 +44,29 @@ const MemberPage = () => {
 
   useEffect(() => {
     const fetchFamily = async () => {
-      if (id) {
-        dispatch(setCurrentMemberId(id));
-        await fetchFamilyMembers(id);
-        await fetchFamilyLineage(id);
+      try {
+        if (id) {
+          dispatch(setCurrentMemberId(id));
+          await fetchFamilyMembers(id);
+          await fetchFamilyLineage(id);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchFamily();
   }, [id, dispatch]);
+
+  if (loading || !id || !currentFamily) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <>
@@ -61,7 +75,7 @@ const MemberPage = () => {
         background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
         overflow: 'auto',
       }}>
-        <BreadCrumb lineage={lineage} />
+        {lineage && lineage.length > 0 && <BreadCrumb lineage={lineage} />}
         <Box sx={{ padding: 4 }}>
           {(currentFamily.children && currentFamily.children.length > 0) ||
           currentFamily.spouse ? (

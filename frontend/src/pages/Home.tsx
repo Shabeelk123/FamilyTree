@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "../api/axios";
-import { Box, Grid } from "@mui/material";
+import { Box, CircularProgress, Grid } from "@mui/material";
 import MemberCard from "../components/MemberCard";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
@@ -16,6 +16,7 @@ const Home = () => {
   const rootMembers = useSelector((state: RootState) => state.member.members);
   const [open, setOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const handleClose = () => {
     setOpen(false);
@@ -34,13 +35,27 @@ const Home = () => {
 
   useEffect(() => {
     const fetchMembers = async () => {
-      const res = await axios.get("/member/root");
-      dispatch(setRootMembers(res.data));
-      dispatch(setCurrentMemberId(null));
+      try {
+        const res = await axios.get("/member/root");
+        dispatch(setRootMembers(res.data));
+        dispatch(setCurrentMemberId(null));
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchMembers();
   }, []);
+
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <>
