@@ -1,5 +1,4 @@
 import { Box, Drawer, Typography } from "@mui/material";
-import React from "react";
 import { Member } from "../types/Member";
 
 interface SidePanelProps {

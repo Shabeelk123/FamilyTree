@@ -82,7 +82,7 @@ const MemberPage = () => {
           <Grid container spacing={4}>
             {/* Display Spouse */}
             {currentFamily.spouse && currentFamily.member && (
-              <Grid item xs={12}>
+              <Grid>
                 <Typography 
                   variant="h5" 
                   sx={{ 
@@ -97,7 +97,7 @@ const MemberPage = () => {
                   💑 Spouse
                 </Typography>
                 <Grid container spacing={3}>
-                  <Grid item>
+                  <Grid>
                     <MemberCard
                       member={currentFamily.spouse}
                       isSpouse={false}
@@ -111,7 +111,7 @@ const MemberPage = () => {
 
             {/* Display Children (Clickable) */}
             {currentFamily.children && currentFamily.children.length > 0 && (
-              <Grid item xs={12}>
+              <Grid>
                 <Typography 
                   variant="h5" 
                   sx={{ 
@@ -130,7 +130,7 @@ const MemberPage = () => {
                     // Filter out spouse entries (where member is actually a spouse, not a child)
                     if (member.parentIds && member.parentIds.length > 0) {
                       return (
-                        <Grid item key={member._id}>
+                        <Grid key={member._id}>
                           <MemberCard
                             member={member}
                             handleView={handleView}
