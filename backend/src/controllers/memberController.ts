@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 export const addMember = async (req: Request, res: Response) => {
   try {
-    const { name, age, gender, familyName, parentId, isSpouse } = req.body;
+    const { name, age, gender, familyName, parentId, isSpouse, isRootMember } = req.body;
     const spouseId = isSpouse ? parentId : undefined;
 
     // If adding a child (not a spouse), get both parent IDs
@@ -26,6 +26,7 @@ export const addMember = async (req: Request, res: Response) => {
       familyName,
       parentIds: parentIds.length > 0 ? parentIds : undefined,
       spouseId: spouseId, // This links TO the existing member
+      isRootMember: isRootMember,
     });
 
     const savedMember = await newMember.save();
@@ -36,20 +37,6 @@ export const addMember = async (req: Request, res: Response) => {
         spouseId: savedMember._id,
       });
     }
-    // const member = await Member.findById(parentId);
-    // const spouse = await Member.findOne({ spouseId: parentId });
-    // const children = await Member.find({ parentId: parentId });
-
-      // const family = isSpouse ? {
-      //   member,
-      //   spouse,
-      //   children,
-      // } :
-      // {
-      //   member,
-      //   children,
-      // };
-
       res.status(201).json(savedMember);
   } catch (error) {
     res.status(500).json({ message: "Error adding member", error });
@@ -58,12 +45,7 @@ export const addMember = async (req: Request, res: Response) => {
 
 export const getRootMembers = async (req: Request, res: Response) => {
   try {
-    const rootMembers = await Member.find({
-      $or: [
-        { parentIds: { $exists: false } },
-        { parentIds: { $size: 0 } }
-      ]
-    });
+    const rootMembers = await Member.find({ isRootMember: true });
 
     res.status(200).json(rootMembers);
   } catch (error) {

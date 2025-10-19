@@ -15,6 +15,7 @@ export interface MemberFormData {
   familyName: string;
   parentId?: string | null; // Keep for form submission (backend will convert to parentIds)
   spouseId?: string;
+  isRootMember?: boolean;
 }
 
 export interface FamilyState {

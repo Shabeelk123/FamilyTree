@@ -39,7 +39,6 @@ const memberSlice = createSlice({
       state.lineage = action.payload;
     },
 
-
     setCurrentFamilyMembers(state, action: PayloadAction<FamilyState|null>) {
       state.currentFamily = action.payload;
     },
@@ -72,17 +71,19 @@ const memberSlice = createSlice({
 
     addMemberToCurrentFamily: (state, action) => {
       const newMember = action.payload;
-      // for adding in root
-      if (!newMember.parentId) {
-        state.members.push(newMember);
-        return;
-      }
+
       if (!state.currentFamily) {
         state.currentFamily = {} as FamilyState;
       }
+
       if (newMember.isSpouse) {
+        // If the new member is a spouse, assign them to the current family.
         state.currentFamily.spouse = newMember;
+      } else if (!newMember.parentId) {
+        // If they are not a spouse and have no parent, they are a new root member.
+        state.members.push(newMember);
       } else {
+        // Otherwise, they must be a child of the current family.
         state.currentFamily.children.push(newMember);
       }
     }

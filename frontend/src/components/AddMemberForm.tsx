@@ -40,6 +40,7 @@ const AddMemberForm: React.FC<Props> = ({ onClose, onSuccess }) => {
     familyName: "",
     parentId: parentId || null,
     isSpouse: false,
+    isRootMember: false,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,6 +56,7 @@ const AddMemberForm: React.FC<Props> = ({ onClose, onSuccess }) => {
     await addMember({
         ...formData,
         age: Number(formData.age),
+        isRootMember: formData.isRootMember || false, // Ensure it's always sent
     });
     if (onSuccess) {
       onSuccess();
@@ -117,6 +119,16 @@ const AddMemberForm: React.FC<Props> = ({ onClose, onSuccess }) => {
               />
             }
             label="Is this member a spouse?"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                name="isRootMember"
+                checked={formData.isRootMember}
+                onChange={handleChange}
+              />
+            }
+            label="Is this member a root member?"
           />
         </Box>
       </DialogContent>

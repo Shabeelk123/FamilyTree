@@ -7,6 +7,7 @@ export interface IMember extends Document {
   familyName: string;
   parentIds?: mongoose.Types.ObjectId[]; // Array for both parents
   spouseId?: mongoose.Types.ObjectId;
+  isRootMember?: boolean;
 }
 
 const memberSchema = new Schema<IMember>(
@@ -17,6 +18,7 @@ const memberSchema = new Schema<IMember>(
     familyName: { type: String, required: true },
     parentIds: [{ type: Schema.Types.ObjectId, ref: "Member" }],
     spouseId: { type: Schema.Types.ObjectId, ref: "Member" },
+    isRootMember: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
