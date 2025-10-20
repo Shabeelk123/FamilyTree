@@ -48,7 +48,7 @@ const Signup = () => {
 
   return (
     <Container maxWidth="sm">
-      <Paper elevation={3} sx={{ padding: 4, mt: 8 }}>
+      <Paper elevation={3} sx={{ padding: 4, mt: 8 }} style={{background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' }}>
         <Typography variant="h5" gutterBottom align="center">
           Signup
         </Typography>

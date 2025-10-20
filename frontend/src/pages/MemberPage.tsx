@@ -20,19 +20,19 @@ const MemberPage = () => {
   const dispatch = useDispatch();
 
   const currentFamily = useSelector(
-    (state: RootState) => state.member.currentFamily);
+    (state: RootState) => state.member.currentFamily
+  );
   const lineage = useSelector((state: RootState) => state.member.lineage);
 
   const [open, setOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const handleView = async (member: Member) => {
+  const handleView = (member: Member) => {
     setSelectedMember(member);
     setOpen(true);
   };
 
-  // delete member
   const handleDelete = async (id: string) => {
     await deleteMember(id);
   };
@@ -69,93 +69,69 @@ const MemberPage = () => {
   }
 
   return (
-    <>
-      <Box sx={{ 
-        height: 'calc(100vh - 80px)',
-        background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-        overflow: 'auto',
-      }}>
-        {lineage && lineage.length > 0 && <BreadCrumb lineage={lineage} />}
-        <Box sx={{ padding: 4 }}>
-          {(currentFamily.children && currentFamily.children.length > 0) ||
-          currentFamily.spouse ? (
-          <Grid container spacing={4}>
-            {/* Display Spouse */}
-            {currentFamily.spouse && currentFamily.member && (
-              <Grid>
-                <Typography 
-                  variant="h5" 
-                  sx={{ 
-                    mb: 3,
-                    fontWeight: 700,
-                    color: '#2c3e50',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 1,
-                  }}
-                >
-                  💑 Spouse
-                </Typography>
-                <Grid container spacing={3}>
-                  <Grid>
-                    <MemberCard
-                      member={currentFamily.spouse}
-                      isSpouse={false}
-                      handleView={handleView}
-                      handleDelete={handleDelete}
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-            )}
+    <Box
+      sx={{
+        height: "calc(100vh - 80px)",
+        background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
+        overflow: "auto",
+      }}
+    >
+      {lineage && lineage.length > 0 && <BreadCrumb lineage={lineage} />}
 
-            {/* Display Children (Clickable) */}
-            {currentFamily.children && currentFamily.children.length > 0 && (
-              <Grid>
-                <Typography 
-                  variant="h5" 
-                  sx={{ 
-                    mb: 3,
-                    fontWeight: 700,
-                    color: '#2c3e50',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 1,
-                  }}
-                >
-                  👶 Children
-                </Typography>
-                <Grid container spacing={3}>
-                  {currentFamily.children.map((member) => {
-                    // Filter out spouse entries (where member is actually a spouse, not a child)
-                    if (member.parentIds && member.parentIds.length > 0) {
-                      return (
-                        <Grid key={member._id}>
-                          <MemberCard
-                            member={member}
-                            handleView={handleView}
-                            handleDelete={handleDelete}
-                          />
-                        </Grid>
-                      );
-                    }
-                    return null;
-                  })}
+      <Box sx={{ padding: 4 }}>
+        {(currentFamily.spouse || (currentFamily.children && currentFamily.children.length > 0)) ? (
+          <Box>
+            <Typography
+              variant="h5"
+              sx={{
+                mb: 3,
+                fontWeight: 700,
+                color: "#2c3e50",
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+              }}
+            >
+              👨‍👩‍👧 Family Members
+            </Typography>
+
+            {/* Combined Spouse + Children */}
+            <Grid
+              container
+              spacing={2}
+              alignItems="center"
+            >
+              {/* Spouse */}
+              {currentFamily.spouse && (
+                <Grid size={{xs: 6, sm: 4, md: 3}} display="flex" justifyContent="center">
+                  <MemberCard
+                    member={currentFamily.spouse}
+                    isSpouse={true}
+                    handleView={handleView}
+                    handleDelete={handleDelete}
+                  />
                 </Grid>
-              </Grid>
-            )}
-          </Grid>
-          ) : (
-            <EmptyPage />
-          )}
-          <SidePanel
-            selectedMember={selectedMember}
-            open={open}
-            handleClose={handleClose}
-          />
-        </Box>
+              )}
+
+              {/* Children */}
+              {currentFamily.children?.map((member) => (
+                <Grid size={{xs: 6, sm: 4, md: 3}} key={member._id} display="flex" justifyContent="center">
+                  <MemberCard
+                    member={member}
+                    handleView={handleView}
+                    handleDelete={handleDelete}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        ) : (
+          <EmptyPage />
+        )}
+
+        <SidePanel selectedMember={selectedMember} open={open} handleClose={handleClose} />
       </Box>
-    </>
+    </Box>
   );
 };
 

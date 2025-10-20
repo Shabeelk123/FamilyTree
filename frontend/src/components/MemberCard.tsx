@@ -58,6 +58,27 @@ const MemberCard = ({
       }} 
       onClick={(e) => handleCardClick(e)}
     >
+      {/* Spouse Indicator Badge */}
+      {isSpouse && (
+        <Box
+          sx={{
+            position: 'relative',
+            top: 8,
+            textAlign: 'center',
+            backgroundColor: '#e91e63',
+            color: 'white',
+            padding: '2px 8px',
+            borderRadius: '12px',
+            fontSize: '0.7rem',
+            fontWeight: 600,
+            zIndex: 1,
+            textTransform: 'uppercase',
+            letterSpacing: '0.5px',
+          }}
+        >
+          Spouse
+        </Box>
+      )}
       <CardMedia
         sx={{
           objectFit: "cover",
