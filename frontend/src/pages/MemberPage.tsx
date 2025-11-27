@@ -99,11 +99,11 @@ const MemberPage = () => {
             <Grid
               container
               spacing={2}
-              alignItems="center"
+              // alignItems="center"
             >
               {/* Spouse */}
               {currentFamily.spouse && (
-                <Grid size={{xs: 6, sm: 4, md: 3}} display="flex" justifyContent="center">
+                <Grid size={{xs: 12, sm: 3, md: 2}} display="flex" justifyContent="center">
                   <MemberCard
                     member={currentFamily.spouse}
                     isSpouse={true}
@@ -115,7 +115,7 @@ const MemberPage = () => {
 
               {/* Children */}
               {currentFamily.children?.map((member) => (
-                <Grid size={{xs: 6, sm: 4, md: 3}} key={member._id} display="flex" justifyContent="center">
+                <Grid size={{xs: 12, sm: 3, md: 2}} key={member._id} display="flex" justifyContent="center">
                   <MemberCard
                     member={member}
                     handleView={handleView}

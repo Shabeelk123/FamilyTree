@@ -9,11 +9,13 @@ import {
 } from "@mui/material";
 import { Member } from "../types/Member";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setCurrentFamilyMembers,
   setSelectedMember,
 } from "../redux/memberSlice";
+import { RootState } from "../redux/store";
+import { checkSpouseLineage } from "../utils/commonUtils";
 
 const MemberCard = ({
   member,
@@ -28,12 +30,17 @@ const MemberCard = ({
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const lineage = useSelector((state: RootState) => state.member.lineage);
 
-  const handleCardClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    // Prevent navigation if this is a spouse from the same family (no family tree to show)
-    // But allow navigation if spouse is from a different family (married into the family)
+
+  const handleCardClick = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    // Prevent navigation if this is a spouse from the different family (no family tree to show)
+    // But allow navigation if spouse is from a same family (married into the family)
     if (isSpouse) {
-      return;
+      const spouseLineage = await checkSpouseLineage(member._id);
+      if (spouseLineage[0]._id !== lineage[0]._id ) {
+        return;
+      }
     }
     e.preventDefault();
     dispatch(setSelectedMember(member));
@@ -44,8 +51,11 @@ const MemberCard = ({
   return (
     <Card 
       sx={{ 
-        maxWidth: 180,
+        position: 'relative', // Add relative positioning for the absolute badge
+        width: '100%', // Allow card to fill its container
         cursor: isSpouse ? 'default' : 'pointer',
+        display: 'flex',
+        flexDirection: 'column',
         opacity: isSpouse ? 0.85 : 1,
         borderRadius: '16px',
         overflow: 'hidden',
@@ -64,7 +74,8 @@ const MemberCard = ({
           sx={{
             position: 'relative',
             top: 8,
-            textAlign: 'center',
+            left: '50%',
+            transform: 'translateX(-50%)',
             backgroundColor: '#e91e63',
             color: 'white',
             padding: '2px 8px',
@@ -82,7 +93,7 @@ const MemberCard = ({
       <CardMedia
         sx={{
           objectFit: "cover",
-          height: { xs: "180px", sm: "180px", md: "160px" },
+          height: { xs: 300, sm: 200, md: 200 }, // 300px on mobile, 180px on larger screens
           width: "100%",
         }}
         image={
@@ -92,7 +103,11 @@ const MemberCard = ({
         }
         title="family"
       />
-      <CardContent sx={{ '&.MuiCardContent-root': { padding: '0px' } }}>
+      <CardContent sx={{ 
+          '&.MuiCardContent-root': { padding: '12px' },
+          flexGrow: 1, // Allow content to take up available space
+          display: 'flex',
+          flexDirection: 'column' }}>
         <Box
           sx={{
             display: "flex",
@@ -100,6 +115,7 @@ const MemberCard = ({
             alignItems: "center",
             justifyContent: "center",
             textAlign: "center",
+            flexGrow: 1,
           }}
         >
           <Typography
@@ -125,7 +141,7 @@ const MemberCard = ({
           </Typography>
         </Box>
       </CardContent>
-        <CardActions sx={{ padding: "8px 12px", justifyContent: "space-between" }}>
+        <CardActions sx={{ padding: "0px 12px 8px 12px", justifyContent: "space-between" }}>
           <Button
             size="small"
             variant="text"

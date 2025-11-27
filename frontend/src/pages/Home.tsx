@@ -68,12 +68,14 @@ const Home = () => {
       {rootMembers && (
         <Grid container spacing={3} sx={{ padding: 4 }}>
           {rootMembers.map((member) => (
+            <Grid size={{xs: 12, sm: 3, md: 2}} display="flex" justifyContent="center">
             <MemberCard
               key={member._id}
               member={member}
               handleView={handleView}
               handleDelete={handleDelete}
             />
+            </Grid>
           ))}
         </Grid>
       )}

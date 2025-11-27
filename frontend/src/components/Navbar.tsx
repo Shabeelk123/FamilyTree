@@ -8,6 +8,7 @@ import Menu from "@mui/material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
+import MenuIcon from "@mui/icons-material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Diversity1Icon from '@mui/icons-material/Diversity1';
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -62,6 +63,7 @@ export const LinkSpouseButton = styled(Button)<ButtonProps>(() => ({
 
 function Navbar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [linkSpouseDialog, setLinkSpouseDialog] = React.useState(false);
 
@@ -77,6 +79,14 @@ function Navbar() {
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
+  };
+
+  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElNav(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
   };
 
 
@@ -125,198 +135,146 @@ function Navbar() {
         <Toolbar
           disableGutters
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
             minHeight: '70px',
             py: 1,
-            flexDirection: 'row',
-            gap: { xs: 2, sm: 0 },
-            alignItems: 'center',
           }}
         >
-          <Box sx={{
-            display: "flex",
-            alignItems: 'center',
-            gap: 1.5,
-            width: { xs: '100%', sm: 'auto' },
-            justifyContent: { xs: 'center', sm: 'flex-start' }
-          }}>
-            <Diversity1Icon sx={{
-              display: "flex",
-              fontSize: { xs: 28, sm: 32 }
-            }} />
-            <Typography
-              variant="h5"
-              noWrap
-              component="a"
-              href="/"
+          {/* Desktop Logo */}
+          <Diversity1Icon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            href="/"
+            sx={{
+              mr: 2,
+              display: { xs: 'none', md: 'flex' },
+              fontFamily: "'Poppins', sans-serif",
+              fontWeight: 700,
+              letterSpacing: '.05rem',
+              color: 'inherit',
+              textDecoration: 'none',
+            }}
+          >
+            Family
+          </Typography>
+
+          {/* Mobile Menu */}
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleOpenNavMenu}
+              color="inherit"
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
               sx={{
-                display: "flex",
-                fontFamily: "'Poppins', sans-serif",
-                fontWeight: 700,
-                letterSpacing: ".05rem",
-                color: "inherit",
-                textDecoration: "none",
-                transition: 'transform 0.2s',
-                fontSize: { xs: '1.2rem', sm: '1.5rem' },
-                '&:hover': {
-                  transform: 'scale(1.05)',
-                }
+                display: { xs: 'block', md: 'none' },
               }}
             >
-              Family
-            </Typography>
+              <MenuItem onClick={() => { setOpenDialog(true); handleCloseNavMenu(); }}>
+                <Typography textAlign="center">Add Member</Typography>
+              </MenuItem>
+              {currentMember && !currentMember.spouseId && (
+                <MenuItem onClick={() => { setLinkSpouseDialog(true); handleCloseNavMenu(); }}>
+                  <Typography textAlign="center">Link Spouse</Typography>
+                </MenuItem>
+              )}
+            </Menu>
           </Box>
 
-          <Box sx={{
-            display: 'flex',
-            gap: 2,
-            flexDirection: 'row',
-            width: { xs: '100%', sm: 'auto' },
-            alignItems: 'center',
-            mt: { xs: 1, sm: 0 }
-          }}>
-            {/* --- Mobile: Icon with small label --- */}
-          <Box sx={{ display: { xs: 'flex', sm: 'none' }, flexDirection: 'row', alignItems: 'center' }}>
-            <ColorButton
-              variant="contained"
-              onClick={() => setOpenDialog(true)}
-              size="small"
-              sx={{
-                width: '60px',
-                height: '50px',
-                borderRadius: '8px',
-                minWidth: 0,
-                px: 0,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <PersonAddIcon fontSize="medium" />
-              <Typography
-              variant="caption"
-              sx={{
-                fontSize: '0.75rem',
-                fontWeight: 500,
-                color: 'white',
-                mt: 0.5,
-                ml: 0.5,
-              }}
-            >
-              Add
-            </Typography>
-            </ColorButton>
-          </Box>
+          {/* Mobile Logo */}
+          <Diversity1Icon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <Typography
+            variant="h5"
+            noWrap
+            component="a"
+            href="/"
+            sx={{
+              mr: 2,
+              display: { xs: 'flex', md: 'none' },
+              flexGrow: 1,
+              fontFamily: "'Poppins', sans-serif",
+              fontWeight: 700,
+              letterSpacing: '.05rem',
+              color: 'inherit',
+              textDecoration: 'none',
+            }}
+          >
+            Family
+          </Typography>
 
-            <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+          {/* Desktop Menu */}
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, gap: 2 }}>
+            <Box>
               <ColorButton
                 variant="contained"
                 onClick={() => setOpenDialog(true)}
                 startIcon={<PersonAddIcon />}
-                size="small"
-                sx={{
-                  width: 'auto',
-                  fontSize: '1rem',
-                  minWidth: 'auto',
-                  px: 2,
-                }}
               >
                 Add Member
               </ColorButton>
             </Box>
-
             {currentMember && !currentMember.spouseId && (
-              <>
-                {/* Mobile: Icon with tooltip */}
-                <Box sx={{ display: { xs: 'flex', sm: 'none' }, flexDirection: 'column', alignItems: 'center' }}>
-                  <LinkSpouseButton
-                    variant="contained"
-                    onClick={() => setLinkSpouseDialog(true)}
-                    size="small"
-                    sx={{
-                      width: '60px',
-                      height: '50px',
-                      borderRadius: '8px',
-                      minWidth: 0,
-                      px: 0,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <FavoriteIcon fontSize="medium" />
-                    <Typography
-              variant="caption"
-              sx={{
-                fontSize: '0.75rem',
-                fontWeight: 500,
-                color: 'white',
-                mt: 0.5,
-                ml: 0.5,
-              }}
-            >
-              Link
-            </Typography>
-                  </LinkSpouseButton>
-                </Box>
-                {/* Desktop: Text with icon */}
-                <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                <Box>
                   <LinkSpouseButton
                     variant="contained"
                     onClick={() => setLinkSpouseDialog(true)}
                     startIcon={<FavoriteIcon />}
-                    size="small"
-                    sx={{
-                      width: 'auto',
-                      fontSize: '1rem',
-                      minWidth: 'auto',
-                      px: 2,
-                    }}
                   >
                     Link Spouse
                   </LinkSpouseButton>
                 </Box>
-              </>
             )}
           </Box>
+
           <Box sx={{
             flexGrow: 0,
-            mt: { xs: 1, sm: 0 }
           }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{
                 p: 0,
-                width: { xs: 40, sm: 56 },
-                height: { xs: 40, sm: 56 }
+                width: { xs: 40, md: 56 },
+                height: { xs: 40, md: 56 }
               }}>
                 <Avatar
                   alt="User"
                   src="/static/images/avatar/2.jpg"
                   sx={{
-                    width: { xs: 32, sm: 40 },
-                    height: { xs: 32, sm: 40 }
+                    width: { xs: 32, md: 40 },
+                    height: { xs: 32, md: 40 }
                   }}
                 />
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{
-                mt: "45px",
-                '& .MuiPaper-root': {
-                  minWidth: { xs: 120, sm: 200 }
-                }
-              }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
+                vertical: "bottom",
+                horizontal: "left",
               }}
               keepMounted
               transformOrigin={{
                 vertical: "top",
-                horizontal: "right",
+                horizontal: "left",
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
@@ -325,14 +283,14 @@ function Navbar() {
                 <MenuItem
                   key={setting}
                   onClick={setting === "Logout" ? handleLogout : handleCloseUserMenu}
-                  sx={{
-                    fontSize: { xs: '0.8rem', sm: '0.9rem' },
-                    py: { xs: 1, sm: 1.5 }
-                  }}
+                  // sx={{
+                  //   fontSize: { xs: '0.8rem', md: '0.9rem' },
+                  //   py: { xs: 1, md: 1.5 }
+                  // }}
                 >
                   <Typography sx={{
                     textAlign: "center",
-                    fontSize: { xs: '0.8rem', sm: '0.9rem' }
+                    // fontSize: { xs: '0.8rem', md: '0.9rem' }
                   }}>
                     {setting}
                   </Typography>
