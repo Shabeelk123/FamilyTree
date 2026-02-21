@@ -51,40 +51,47 @@ const Home = () => {
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
-        <CircularProgress />
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="calc(100vh - 64px)"
+        sx={{
+          background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+        }}
+      >
+        <CircularProgress sx={{ color: '#667eea' }} />
       </Box>
     );
   }
 
   return (
     <>
-      <Box sx={{ 
-        height: 'calc(100vh - 80px)',
+      <Box sx={{
+        minHeight: 'calc(100vh - 64px)',
         background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
         overflow: 'auto',
       }}>
         <BreadCrumb lineage={lineage} />
-      {rootMembers && (
-        <Grid container spacing={3} sx={{ padding: 4 }}>
-          {rootMembers.map((member) => (
-            <Grid size={{xs: 12, sm: 3, md: 2}} display="flex" justifyContent="center">
-            <MemberCard
-              key={member._id}
-              member={member}
-              handleView={handleView}
-              handleDelete={handleDelete}
-            />
-            </Grid>
-          ))}
-        </Grid>
-      )}
-      <SidePanel
-        selectedMember={selectedMember}
-        open={open}
-        handleClose={handleClose}
-      />
-    </Box>
+        {rootMembers && (
+          <Grid container spacing={3} sx={{ padding: { xs: 2, sm: 3, md: 4 } }}>
+            {rootMembers.map((member) => (
+              <Grid key={member._id} size={{ xs: 12, sm: 6, md: 4, lg: 2 }} display="flex" justifyContent="center">
+                <MemberCard
+                  member={member}
+                  handleView={handleView}
+                  handleDelete={handleDelete}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        )}
+        <SidePanel
+          selectedMember={selectedMember}
+          open={open}
+          handleClose={handleClose}
+        />
+      </Box>
     </>
   );
 };

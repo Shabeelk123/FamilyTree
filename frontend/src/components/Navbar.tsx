@@ -28,35 +28,42 @@ const settings = ["Profile", "Logout"];
 export const ColorButton = styled(Button)<ButtonProps>(() => ({
   color: '#fff',
   backgroundColor: '#4CAF50',
-  padding: '10px 24px',
-  borderRadius: '8px',
+  padding: '10px 20px',
+  borderRadius: '12px',
   textTransform: 'none',
-  fontSize: '15px',
+  fontSize: '14px',
   fontWeight: 600,
-  boxShadow: '0 4px 12px rgba(76, 175, 80, 0.3)',
-  transition: 'all 0.3s ease',
+  boxShadow: '0 2px 8px rgba(76, 175, 80, 0.25)',
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  border: 'none',
   '&:hover': {
     backgroundColor: '#45a049',
-    transform: 'translateY(-2px)',
-    boxShadow: '0 6px 16px rgba(76, 175, 80, 0.4)',
+    transform: 'translateY(-1px)',
+    boxShadow: '0 4px 12px rgba(76, 175, 80, 0.35)',
+  },
+  '&:active': {
+    transform: 'translateY(0)',
   },
 }));
 
 export const LinkSpouseButton = styled(Button)<ButtonProps>(() => ({
   color: '#fff',
   backgroundColor: '#FF4081',
-  padding: '10px 24px',
-  borderRadius: '8px',
+  padding: '10px 20px',
+  borderRadius: '12px',
   textTransform: 'none',
-  fontSize: '15px',
+  fontSize: '14px',
   fontWeight: 600,
-  boxShadow: '0 4px 12px rgba(255, 64, 129, 0.3)',
-  transition: 'all 0.3s ease',
-  marginLeft: '5 px',
+  boxShadow: '0 2px 8px rgba(255, 64, 129, 0.25)',
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  border: 'none',
   '&:hover': {
     backgroundColor: '#F50057',
-    transform: 'translateY(-2px)',
-    boxShadow: '0 6px 16px rgba(255, 64, 129, 0.4)',
+    transform: 'translateY(-1px)',
+    boxShadow: '0 4px 12px rgba(255, 64, 129, 0.35)',
+  },
+  '&:active': {
+    transform: 'translateY(0)',
   },
 }));
 
@@ -123,116 +130,117 @@ function Navbar() {
 
   return (
     <>
-    <AppBar 
-      position="static" 
-      elevation={2}
-      sx={{
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        boxShadow: '0 4px 20px 0 rgba(0,0,0,0.12)',
-      }}
-    >
-      <Container maxWidth="xl">
-        <Toolbar
-          disableGutters
-          sx={{
-            minHeight: '70px',
-            py: 1,
-          }}
-        >
-          {/* Desktop Logo */}
-          <Diversity1Icon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
+      <AppBar
+        position="static"
+        elevation={0}
+        sx={{
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        }}
+      >
+        <Container maxWidth="xl">
+          <Toolbar
+            disableGutters
             sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: "'Poppins', sans-serif",
-              fontWeight: 700,
-              letterSpacing: '.05rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              minHeight: '64px',
+              py: 0.5,
             }}
           >
-            Family
-          </Typography>
-
-          {/* Mobile Menu */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+            {/* Desktop Logo */}
+            <Diversity1Icon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              href="/"
               sx={{
-                display: { xs: 'block', md: 'none' },
+                mr: 2,
+                display: { xs: 'none', md: 'flex' },
+                fontFamily: "'Poppins', sans-serif",
+                fontWeight: 700,
+                letterSpacing: '.05rem',
+                color: 'inherit',
+                textDecoration: 'none',
               }}
             >
-              <MenuItem onClick={() => { setOpenDialog(true); handleCloseNavMenu(); }}>
-                <Typography textAlign="center">Add Member</Typography>
-              </MenuItem>
-              {currentMember && !currentMember.spouseId && (
-                <MenuItem onClick={() => { setLinkSpouseDialog(true); handleCloseNavMenu(); }}>
-                  <Typography textAlign="center">Link Spouse</Typography>
-                </MenuItem>
-              )}
-            </Menu>
-          </Box>
+              Family
+            </Typography>
 
-          {/* Mobile Logo */}
-          <Diversity1Icon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: "'Poppins', sans-serif",
-              fontWeight: 700,
-              letterSpacing: '.05rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            Family
-          </Typography>
-
-          {/* Desktop Menu */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, gap: 2 }}>
-            <Box>
-              <ColorButton
-                variant="contained"
-                onClick={() => setOpenDialog(true)}
-                startIcon={<PersonAddIcon />}
+            {/* Mobile Menu */}
+            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                color="inherit"
               >
-                Add Member
-              </ColorButton>
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorElNav}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+                }}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                sx={{
+                  display: { xs: 'block', md: 'none' },
+                }}
+              >
+                <MenuItem onClick={() => { setOpenDialog(true); handleCloseNavMenu(); }}>
+                  <Typography textAlign="center">Add Member</Typography>
+                </MenuItem>
+                {currentMember && !currentMember.spouseId && (
+                  <MenuItem onClick={() => { setLinkSpouseDialog(true); handleCloseNavMenu(); }}>
+                    <Typography textAlign="center">Link Spouse</Typography>
+                  </MenuItem>
+                )}
+              </Menu>
             </Box>
-            {currentMember && !currentMember.spouseId && (
+
+            {/* Mobile Logo */}
+            <Diversity1Icon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+            <Typography
+              variant="h5"
+              noWrap
+              component="a"
+              href="/"
+              sx={{
+                mr: 2,
+                display: { xs: 'flex', md: 'none' },
+                flexGrow: 1,
+                fontFamily: "'Poppins', sans-serif",
+                fontWeight: 700,
+                letterSpacing: '.05rem',
+                color: 'inherit',
+                textDecoration: 'none',
+              }}
+            >
+              Family
+            </Typography>
+
+            {/* Desktop Menu */}
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, gap: 2 }}>
+              <Box>
+                <ColorButton
+                  variant="contained"
+                  onClick={() => setOpenDialog(true)}
+                  startIcon={<PersonAddIcon />}
+                >
+                  Add Member
+                </ColorButton>
+              </Box>
+              {currentMember && !currentMember.spouseId && (
                 <Box>
                   <LinkSpouseButton
                     variant="contained"
@@ -242,83 +250,83 @@ function Navbar() {
                     Link Spouse
                   </LinkSpouseButton>
                 </Box>
-            )}
-          </Box>
+              )}
+            </Box>
 
-          <Box sx={{
-            flexGrow: 0,
-          }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{
-                p: 0,
-                width: { xs: 40, md: 56 },
-                height: { xs: 40, md: 56 }
-              }}>
-                <Avatar
-                  alt="User"
-                  src="/static/images/avatar/2.jpg"
-                  sx={{
-                    width: { xs: 32, md: 40 },
-                    height: { xs: 32, md: 40 }
-                  }}
-                />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem
-                  key={setting}
-                  onClick={setting === "Logout" ? handleLogout : handleCloseUserMenu}
+            <Box sx={{
+              flexGrow: 0,
+            }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{
+                  p: 0,
+                  width: { xs: 40, md: 56 },
+                  height: { xs: 40, md: 56 }
+                }}>
+                  <Avatar
+                    alt="User"
+                    src="/static/images/avatar/2.jpg"
+                    sx={{
+                      width: { xs: 32, md: 40 },
+                      height: { xs: 32, md: 40 }
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem
+                    key={setting}
+                    onClick={setting === "Logout" ? handleLogout : handleCloseUserMenu}
                   // sx={{
                   //   fontSize: { xs: '0.8rem', md: '0.9rem' },
                   //   py: { xs: 1, md: 1.5 }
                   // }}
-                >
-                  <Typography sx={{
-                    textAlign: "center",
-                    // fontSize: { xs: '0.8rem', md: '0.9rem' }
-                  }}>
-                    {setting}
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+                  >
+                    <Typography sx={{
+                      textAlign: "center",
+                      // fontSize: { xs: '0.8rem', md: '0.9rem' }
+                    }}>
+                      {setting}
+                    </Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
 
-    {/* Dialog for Add Member Form */}
-    <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
+      {/* Dialog for Add Member Form */}
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
         <AddMemberForm onClose={() => setOpenDialog(false)} onSuccess={handleAddMemberSuccess} />
-    </Dialog>
+      </Dialog>
 
-    {/* Dialog for Link Spouse Form */}
-    <Dialog open={linkSpouseDialog} onClose={() => setLinkSpouseDialog(false)} maxWidth="sm" fullWidth>
-      {currentMember && (
-        <LinkSpouseForm 
-          currentMemberId={currentMember._id}
-          currentMemberGender={currentMember.gender}
-          onClose={() => setLinkSpouseDialog(false)}
-          onSuccess={handleLinkSpouseSuccess}
-        />
-      )}
-    </Dialog>
-  </>
+      {/* Dialog for Link Spouse Form */}
+      <Dialog open={linkSpouseDialog} onClose={() => setLinkSpouseDialog(false)} maxWidth="sm" fullWidth>
+        {currentMember && (
+          <LinkSpouseForm
+            currentMemberId={currentMember._id}
+            currentMemberGender={currentMember.gender}
+            onClose={() => setLinkSpouseDialog(false)}
+            onSuccess={handleLinkSpouseSuccess}
+          />
+        )}
+      </Dialog>
+    </>
   );
 }
 export default Navbar;

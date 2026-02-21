@@ -1,18 +1,14 @@
-import { Box, Button, Typography } from "@mui/material";
-import PersonOffIcon from "@mui/icons-material/PersonOff";
+import { Box, Typography } from "@mui/material";
+import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
 
 interface EmptyStateProps {
   title?: string;
   subtitle?: string;
-  buttonText?: string;
-  onButtonClick?: () => void;
 }
 
 const EmptyPage = ({
-  title = "No members found",
-  subtitle = "You can add the first member to this family.",
-  buttonText = "Add Member",
-  onButtonClick,
+  title = "No Family Members Yet",
+  subtitle = "Add family members using the 'Add Member' button in the navigation bar to start building your family tree.",
 }: EmptyStateProps) => {
   return (
     <Box
@@ -20,22 +16,57 @@ const EmptyPage = ({
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
-      height="70vh"
+      minHeight="60vh"
       textAlign="center"
-      px={2}
+      px={3}
     >
-      <PersonOffIcon sx={{ fontSize: 60, mb: 2, color: "gray" }} />
-      <Typography variant="h5" gutterBottom>
+      {/* Icon Container */}
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: 120,
+          height: 120,
+          borderRadius: '50%',
+          background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+          mb: 3,
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+        }}
+      >
+        <FamilyRestroomIcon
+          sx={{
+            fontSize: 60,
+            color: '#667eea',
+            opacity: 0.7,
+          }}
+        />
+      </Box>
+
+      {/* Title */}
+      <Typography
+        variant="h5"
+        gutterBottom
+        sx={{
+          fontWeight: 700,
+          color: '#2c3e50',
+          mb: 1.5,
+        }}
+      >
         {title}
       </Typography>
-      <Typography variant="body1" mb={2}>
+
+      {/* Subtitle */}
+      <Typography
+        variant="body1"
+        sx={{
+          color: 'text.secondary',
+          maxWidth: 480,
+          lineHeight: 1.6,
+        }}
+      >
         {subtitle}
       </Typography>
-      {onButtonClick && (
-        <Button variant="contained" onClick={onButtonClick}>
-          {buttonText}
-        </Button>
-      )}
     </Box>
   );
 };

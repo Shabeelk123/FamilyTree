@@ -16,6 +16,9 @@ import {
 } from "../redux/memberSlice";
 import { RootState } from "../redux/store";
 import { checkSpouseLineage } from "../utils/commonUtils";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 const MemberCard = ({
   member,
@@ -38,7 +41,7 @@ const MemberCard = ({
     // But allow navigation if spouse is from a same family (married into the family)
     if (isSpouse) {
       const spouseLineage = await checkSpouseLineage(member._id);
-      if (spouseLineage[0]._id !== lineage[0]._id ) {
+      if (spouseLineage[0]._id !== lineage[0]._id) {
         return;
       }
     }
@@ -49,65 +52,94 @@ const MemberCard = ({
   };
 
   return (
-    <Card 
-      sx={{ 
-        position: 'relative', // Add relative positioning for the absolute badge
-        width: '100%', // Allow card to fill its container
+    <Card
+      sx={{
+        position: 'relative',
+        width: '100%',
+        maxWidth: 200,
         cursor: isSpouse ? 'default' : 'pointer',
         display: 'flex',
         flexDirection: 'column',
-        opacity: isSpouse ? 0.85 : 1,
+        opacity: isSpouse ? 0.95 : 1,
         borderRadius: '16px',
         overflow: 'hidden',
-        transition: 'all 0.3s ease',
-        border: '1px solid rgba(0,0,0,0.08)',
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        border: '1px solid rgba(0,0,0,0.06)',
+        background: '#ffffff',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
         '&:hover': {
-          boxShadow: isSpouse ? '0 4px 12px rgba(0,0,0,0.1)' : '0 8px 24px rgba(0,0,0,0.15)',
-          transform: isSpouse ? 'none' : 'translateY(-4px)',
+          boxShadow: isSpouse ? '0 4px 16px rgba(0,0,0,0.12)' : '0 8px 24px rgba(0,0,0,0.16)',
+          transform: isSpouse ? 'translateY(-2px)' : 'translateY(-4px)',
         }
-      }} 
+      }}
       onClick={(e) => handleCardClick(e)}
     >
       {/* Spouse Indicator Badge */}
       {isSpouse && (
         <Box
           sx={{
-            position: 'relative',
+            position: 'absolute',
             top: 8,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            backgroundColor: '#e91e63',
+            right: 8,
+            backgroundColor: '#FF4081',
             color: 'white',
-            padding: '2px 8px',
-            borderRadius: '12px',
-            fontSize: '0.7rem',
-            fontWeight: 600,
-            zIndex: 1,
+            padding: '3px 8px',
+            borderRadius: '16px',
+            fontSize: '0.65rem',
+            fontWeight: 700,
+            zIndex: 2,
             textTransform: 'uppercase',
-            letterSpacing: '0.5px',
+            letterSpacing: '0.3px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 0.3,
+            boxShadow: '0 2px 8px rgba(255, 64, 129, 0.4)',
           }}
         >
+          <FavoriteIcon sx={{ fontSize: '0.75rem' }} />
           Spouse
         </Box>
       )}
-      <CardMedia
+
+      {/* Member Image */}
+      <Box
         sx={{
-          objectFit: "cover",
-          height: { xs: 300, sm: 200, md: 200 }, // 300px on mobile, 180px on larger screens
-          width: "100%",
+          position: 'relative',
+          width: '100%',
+          paddingTop: '100%', // 1:1 Aspect Ratio
+          overflow: 'hidden',
+          background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
         }}
-        image={
-          member.gender === "male"
-            ? "https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png"
-            : "https://cdn.pixabay.com/photo/2016/08/20/05/36/avatar-1606914_1280.png"
-        }
-        title="family"
-      />
-      <CardContent sx={{ 
-          '&.MuiCardContent-root': { padding: '12px' },
-          flexGrow: 1, // Allow content to take up available space
-          display: 'flex',
-          flexDirection: 'column' }}>
+      >
+        <CardMedia
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: "cover",
+          }}
+          image={
+            member.gender === "male"
+              ? "https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png"
+              : "https://cdn.pixabay.com/photo/2016/08/20/05/36/avatar-1606914_1280.png"
+          }
+          title={member.name}
+        />
+      </Box>
+
+      {/* Member Info */}
+      <CardContent sx={{
+        '&.MuiCardContent-root': {
+          padding: '12px',
+          paddingBottom: '8px',
+        },
+        flexGrow: 1,
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+      >
         <Box
           sx={{
             display: "flex",
@@ -122,63 +154,92 @@ const MemberCard = ({
             gutterBottom
             variant="h6"
             component="div"
-            sx={{ 
+            sx={{
               mb: "4px",
-              fontWeight: 600,
-              fontSize: '1.1rem',
+              fontWeight: 700,
+              fontSize: '1rem',
+              color: '#2c3e50',
+              lineHeight: 1.3,
             }}
           >
             {member.name}
           </Typography>
-          <Typography 
+          <Typography
             variant="body2"
             sx={{
               color: "text.secondary",
-              fontSize: '0.9rem',
+              fontSize: '0.8rem',
+              fontWeight: 500,
             }}
           >
             {member.familyName}
           </Typography>
         </Box>
       </CardContent>
-        <CardActions sx={{ padding: "0px 12px 8px 12px", justifyContent: "space-between" }}>
-          <Button
-            size="small"
-            variant="text"
-            sx={{
-              textTransform: 'none',
-              color: '#667eea',
-              fontWeight: 600,
-              '&:hover': {
-                backgroundColor: 'rgba(102, 126, 234, 0.08)',
-              }
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              if (handleView) handleView(member);
-            }}
-          >
-            View
-          </Button>
-          <Button
-            size="small"
-            variant="text"
-            sx={{
-              textTransform: 'none',
-              color: '#f5576c',
-              fontWeight: 600,
-              '&:hover': {
-                backgroundColor: 'rgba(245, 87, 108, 0.08)',
-              }
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDelete?.(member._id);
-            }}
-          >
-            Delete
-          </Button>
-        </CardActions>
+
+      {/* Action Buttons */}
+      <CardActions
+        sx={{
+          padding: "0px 8px 8px 8px",
+          justifyContent: "space-between",
+          gap: 0.5,
+        }}
+      >
+        <Button
+          size="small"
+          variant="outlined"
+          startIcon={<VisibilityIcon sx={{ fontSize: '0.9rem' }} />}
+          sx={{
+            flex: 1,
+            textTransform: 'none',
+            color: '#667eea',
+            borderColor: '#667eea',
+            fontWeight: 600,
+            fontSize: '0.75rem',
+            borderRadius: '8px',
+            padding: '4px 8px',
+            transition: 'all 0.2s ease',
+            '&:hover': {
+              backgroundColor: 'rgba(102, 126, 234, 0.08)',
+              borderColor: '#667eea',
+              transform: 'scale(1.02)',
+            }
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (handleView) handleView(member);
+          }}
+        >
+          View
+        </Button>
+        <Button
+          size="small"
+          variant="outlined"
+          startIcon={<DeleteOutlineIcon sx={{ fontSize: '0.9rem' }} />}
+          sx={{
+            flex: 1,
+            textTransform: 'none',
+            color: '#f5576c',
+            borderColor: '#f5576c',
+            fontWeight: 600,
+            fontSize: '0.75rem',
+            borderRadius: '8px',
+            padding: '4px 8px',
+            transition: 'all 0.2s ease',
+            '&:hover': {
+              backgroundColor: 'rgba(245, 87, 108, 0.08)',
+              borderColor: '#f5576c',
+              transform: 'scale(1.02)',
+            }
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDelete?.(member._id);
+          }}
+        >
+          Delete
+        </Button>
+      </CardActions>
     </Card>
   );
 };

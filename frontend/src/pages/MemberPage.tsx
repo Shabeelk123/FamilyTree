@@ -62,8 +62,16 @@ const MemberPage = () => {
 
   if (loading || !id || !currentFamily) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
-        <CircularProgress />
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="calc(100vh - 64px)"
+        sx={{
+          background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+        }}
+      >
+        <CircularProgress sx={{ color: '#667eea' }} />
       </Box>
     );
   }
@@ -71,14 +79,14 @@ const MemberPage = () => {
   return (
     <Box
       sx={{
-        height: "calc(100vh - 80px)",
+        minHeight: "calc(100vh - 64px)",
         background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
         overflow: "auto",
       }}
     >
       {lineage && lineage.length > 0 && <BreadCrumb lineage={lineage} />}
 
-      <Box sx={{ padding: 4 }}>
+      <Box sx={{ padding: { xs: 2, sm: 3, md: 4 } }}>
         {(currentFamily.spouse || (currentFamily.children && currentFamily.children.length > 0)) ? (
           <Box>
             <Typography
@@ -90,6 +98,7 @@ const MemberPage = () => {
                 display: "flex",
                 alignItems: "center",
                 gap: 1,
+                fontSize: { xs: '1.25rem', sm: '1.5rem' },
               }}
             >
               👨‍👩‍👧 Family Members
@@ -98,12 +107,11 @@ const MemberPage = () => {
             {/* Combined Spouse + Children */}
             <Grid
               container
-              spacing={2}
-              // alignItems="center"
+              spacing={3}
             >
               {/* Spouse */}
               {currentFamily.spouse && (
-                <Grid size={{xs: 12, sm: 3, md: 2}} display="flex" justifyContent="center">
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2 }} display="flex" justifyContent="center">
                   <MemberCard
                     member={currentFamily.spouse}
                     isSpouse={true}
@@ -115,7 +123,7 @@ const MemberPage = () => {
 
               {/* Children */}
               {currentFamily.children?.map((member) => (
-                <Grid size={{xs: 12, sm: 3, md: 2}} key={member._id} display="flex" justifyContent="center">
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2 }} key={member._id} display="flex" justifyContent="center">
                   <MemberCard
                     member={member}
                     handleView={handleView}
